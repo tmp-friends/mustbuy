@@ -6,16 +6,14 @@ import useSWR, { Fetcher } from "swr";
 
 const TwitterUserName: NextPage = () => {
   const router = useRouter()
-  const { userName } = router.query
-  const name = typeof userName === "string" ?? ""
+  const name = router.query.user_name
 
-  const fetcher = (url: string): Promise<any> => fetch(url).then(r => r.json())
-
-  const { data } = useSWR('/api/tweets', fetcher)
+  const fetcher = (url: string): Promise<any> => fetch(url).then(res => res.json())
+  const { data } = useSWR(`/api/tweets?name=${name}`, fetcher)
 
   return (
     <>
-      <Box>{userName}</Box>
+      <Box>{name}</Box>
       <Box>{JSON.stringify(data, null, 2)}</Box>
     </>
   )
