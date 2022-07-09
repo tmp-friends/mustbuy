@@ -1,4 +1,4 @@
-import Twitter, { TweetV2UserLikedTweetsPaginator } from "twitter-api-v2";
+import Twitter from "twitter-api-v2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { LikedTweets } from '../../domain/liked-tweets'
 
@@ -6,27 +6,31 @@ const searchConditions1 = "#芸カ27"
 const searchConditions2 = "#芸カ27お品書き"
 
 const token = process.env.TWITTER_APP_USER_TOKEN ?? ""
-const twitterClient = new Twitter(token)
+const twitterClient = new Twitter(token).readOnly
 
 const hundler = async (
   req: NextApiRequest,
   res: NextApiResponse
   ) => {
-    const userId = await getUserId()
-    const tweets = await getLikedTweetsByUserId(userId)
+    const { name } = req.query
+    const userId = await getUserId(name)
+    const tweets = await getLikedTweets(userId)
 
-    console.log(tweets)
+    // console.log(tweets)
     res.status(200).json(tweets)
 }
 
-const getUserId = async (): Promise<string> => {
-  const userData = await twitterClient.v2.userByUsername("temple_circle")
+const getUserId = async (name: string | string[] | undefined): Promise<string> => {
+  if (typeof name !== "string") {
+    return ""
+  }
+  const userData = await twitterClient.v2.userByUsername(name)
   const userId = userData.data.id
 
   return userId
 }
 
-const getLikedTweetsByUserId = async (userId: string): Promise<LikedTweets[]> => {
+const getLikedTweets = async (userId: string): Promise<LikedTweets[]> => {
   const likedTweetsData = await twitterClient.v2.userLikedTweets(userId)
   const likedTweets = likedTweetsData._realData.data
 
