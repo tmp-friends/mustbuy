@@ -9,9 +9,9 @@ const TwitterUserName: NextPage = () => {
   const { userName } = router.query
   const name = typeof userName === "string" ?? ""
 
-  const fetcher:Fetcher<Array<string>> = url => fetch(url).then(r => r.json())
+  const fetcher = (url: string): Promise<any> => fetch(url).then(r => r.json())
 
-  const { data, error } = useSWR('/api/tweets', fetcher)
+  const { data } = useSWR('/api/tweets', fetcher)
 
   return (
     <>
