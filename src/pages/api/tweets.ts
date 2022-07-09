@@ -16,8 +16,10 @@ const hundler = async (
     const userId = await getUserId(name)
     const tweets = await getLikedTweets(userId)
 
-    // console.log(tweets)
-    res.status(200).json(tweets)
+    console.log(tweets)
+    res.status(200).json({
+      tweets: tweets
+    })
 }
 
 const getUserId = async (name: string | string[] | undefined): Promise<string> => {
