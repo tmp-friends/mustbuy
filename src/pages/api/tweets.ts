@@ -31,14 +31,13 @@ const getUserId = async (name: string | string[] | undefined): Promise<string> =
 }
 
 const getLikedTweets = async (userId: string): Promise<LikedTweets[]> => {
-  const likedTweetsData = await twitterClient.v2.userLikedTweets(userId)
-  const likedTweets = likedTweetsData._realData.data
+  const likedTweets = await twitterClient.v2.userLikedTweets(userId)
 
   return extractTweets(likedTweets)
 }
 
 const extractTweets = (tweets: any): LikedTweets[] => {
-  const extractedTweets = tweets.filter((tweet: any) => {
+  const extractedTweets = tweets._realData.data.filter((tweet: any) => {
     if (tweet.text.includes(searchConditions1) || tweet.text.includes(searchConditions2)) {
       return new LikedTweets({
         id: tweet.id,
