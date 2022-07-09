@@ -16,12 +16,10 @@ const TwitterUserName: NextPage = () => {
     <>
       <Box>{name}</Box>
       {/* useEffectはレンダリングされたタイミングで実行されるので初期値がnullだとエラー */}
-      {data?.tweets.map((value :any, key :number) => {
-        {console.log(value, key)}
+      {/* TODO: dataに型付けする */}
+      {data?.tweets.map((value :any, index :number) => {
         return (
-          <Box>
-            <TwitterTweetEmbed tweetId={`${value.id}`}/>
-          </Box>
+          <TwitterTweetEmbed key={index} tweetId={`${value.id}`}/>
         )
       })}
     </>
