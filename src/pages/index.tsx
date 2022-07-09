@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Button, Flex, FormControl, FormLabel, FormHelperText, Input } from "@chakra-ui/react";
 
 const Home: NextPage = () => {
   const {
@@ -17,21 +17,25 @@ const Home: NextPage = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl>
-        <FormLabel htmlFor="name">TwitterのUserIdを入力してください</FormLabel>
+        <FormLabel htmlFor="name">TwitterのユーザIDを入力してください</FormLabel>
         <Input
           id="name"
           placeholder="temple_circle"
           {...register("name")}
         ></Input>
+        <FormHelperText>※最新100件分のいいねツイートしか対象になりません</FormHelperText>
+        <FormHelperText>※鍵アカウントの方はご利用できません</FormHelperText>
       </FormControl>
 
-      <Button
-        mt={4}
-        colorScheme="teal"
-        type="submit"
-      >Submit</Button>
+      <Flex justify="center">
+        <Button
+          mt={8}
+          colorScheme="twitter"
+          type="submit"
+        >確認する</Button>
+      </Flex>
     </form>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
