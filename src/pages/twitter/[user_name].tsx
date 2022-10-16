@@ -11,7 +11,10 @@ const TwitterUserName: NextPage = () => {
 
   const fetcher = (url: string): Promise<any> =>
     fetch(url).then((res) => res.json());
-  const { data, error } = useSWR(`/api/tweets?name=${name}`, fetcher);
+  const { data, error } = useSWR(
+    `/api/find-liked-tweets?name=${name}`,
+    fetcher
+  );
 
   if (error) return <Box>Failed to load</Box>;
   if (!data) return <Box>Now Loading...</Box>;
