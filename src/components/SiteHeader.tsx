@@ -1,16 +1,16 @@
 import { FC } from "react";
-import Link from "next/link";
-import { Flex, Text } from "@chakra-ui/react";
-
-import { ContentWrapper } from "./ContentWrapper";
+import { Flex, Link } from "@chakra-ui/react";
 
 export const SiteHeader: FC = () => {
   return (
     <Flex as="header" shadow="md" p={3}>
-      <Link href="/" passHref>
-        <Text fontSize="xl" fontWeight="semibold">
-          MustBuy
-        </Text>
+      <Link
+        href="/"
+        fontSize="xl"
+        fontWeight="semibold"
+        _hover={{ textDecoration: "none" }}
+      >
+        MustBuy
       </Link>
     </Flex>
   );
