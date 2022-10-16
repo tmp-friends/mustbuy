@@ -1,9 +1,10 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Text, Box } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
-import { TwitterTweetEmbed } from "react-twitter-embed";
+
+import { tweets } from "../../components/twitter";
 
 const TwitterUserName: NextPage = () => {
   const router = useRouter();
@@ -18,21 +19,14 @@ const TwitterUserName: NextPage = () => {
 
   if (error) return <Box>Failed to load</Box>;
   if (!data) return <Box>Now Loading...</Box>;
+  console.log(data);
 
   return (
     <>
-      <Text fontSize="md" pb={4}>
-        @{name} さんの いいねしたツイート
+      <Text fontSize="md" fontWeight="hairline" pb={4}>
+        Results @{name}
       </Text>
-      {/* useEffectはレンダリングされたタイミングで実行されるので初期値がnullだとエラー */}
-      {/* TODO: dataに型付けする */}
-      {data.tweets.length ? (
-        data.tweets.map((value: any, index: number) => {
-          return <TwitterTweetEmbed key={index} tweetId={`${value.id}`} />;
-        })
-      ) : (
-        <Box>LikedTweets not found</Box>
-      )}
+      {tweets(data.tweets)}
     </>
   );
 };

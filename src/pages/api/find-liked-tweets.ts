@@ -17,7 +17,7 @@ const hundler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log(tweets);
 
     res.status(200).json({
-      tweets: tweets,
+      tweets,
     });
   } catch (error: any) {
     // Custom error - 短時間で頻繁にアクセスしたとき
