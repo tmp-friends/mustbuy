@@ -31,7 +31,7 @@ const Home: NextPage = () => {
             </FormLabel>
 
             <InputGroup py={2}>
-              <InputLeftAddon children="@" />
+              <InputLeftAddon>@</InputLeftAddon>
               <Input
                 htmlSize={20}
                 width="auto"
