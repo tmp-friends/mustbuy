@@ -1,17 +1,24 @@
 import { FC } from "react";
-import { Flex, Link } from "@chakra-ui/react";
+import { Box, Flex, Link, Heading } from "@chakra-ui/react";
 
 export const SiteHeader: FC = () => {
   return (
-    <Flex as="header" shadow="md" p={3}>
-      <Link
-        href="/"
-        fontSize="xl"
-        fontWeight="semibold"
-        _hover={{ textDecoration: "none" }}
+    <Box py={6}>
+      <Flex
+        as="header"
+        shadow="md"
+        p={3}
+        position="fixed"
+        top="0"
+        width="100%"
+        background="whiteAlpha.600"
       >
-        MustBuy
-      </Link>
-    </Flex>
+        <Link href="/" _hover={{ textDecoration: "none" }}>
+          <Heading as="h1" fontSize="xl" fontWeight="bold">
+            MustBuy
+          </Heading>
+        </Link>
+      </Flex>
+    </Box>
   );
 };

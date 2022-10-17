@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   };
 
   return (
-    <Box pt={4}>
+    <Box pt={4} pb={10}>
       <Flex justify="center">
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl>
