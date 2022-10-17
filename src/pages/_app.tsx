@@ -1,9 +1,9 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import { ChakraProvider } from '@chakra-ui/react'
+import type { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
 
-import { ContentWrapper } from '../components/ContentWrapper'
-import { SiteHeader } from '../components/SiteHeader'
+import { ContentWrapper } from "../components/content-wrapper";
+import { SiteHeader } from "../components/site-header";
+import { SiteFooter } from "../components/site-footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -12,8 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ContentWrapper>
         <Component {...pageProps} />
       </ContentWrapper>
+      <SiteFooter />
     </ChakraProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
