@@ -1,6 +1,7 @@
 import Twitter, { TweetV2UserLikedTweetsPaginator } from "twitter-api-v2";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { LikedTweets } from "../../domain/liked-tweets";
+import { FetchedTweet } from "./types/fetched-tweet";
+import { ExtractedTweet } from "../../domain/extracted-tweet";
 
 const searchConditions1 = "#芸カ27";
 const searchConditions2 = "#芸カ27お品書き";
@@ -42,29 +43,28 @@ const getUserId = async (
   return userId;
 };
 
-const getLikedTweets = async (userId: string): Promise<LikedTweets[]> => {
-  const likedTweets = await twitterClient.v2.userLikedTweets(userId);
+const getLikedTweets = async (userId: string): Promise<ExtractedTweet[]> => {
+  const fetchedTweets = await twitterClient.v2.userLikedTweets(userId);
 
-  return extractTweets(likedTweets);
+  return extractTweets(fetchedTweets);
 };
 
 const extractTweets = (
-  tweets: TweetV2UserLikedTweetsPaginator
-): LikedTweets[] => {
-  const extractedTweets = tweets._realData.data.filter(
-    (tweet: TweetV2UserLikedTweetsPaginator) => {
-      if (
-        tweet.text.includes(searchConditions1) ||
-        tweet.text.includes(searchConditions2)
-      ) {
-        return new LikedTweets({
-          id: tweet.id,
-        });
-      }
-    }
+  fetchedTweets: TweetV2UserLikedTweetsPaginator
+): ExtractedTweet[] => {
+  if (!fetchedTweets) {
+    throw new Error("LikedTweet not found");
+  }
+
+  const extractedTweets = fetchedTweets._realData.data.filter(
+    (tweet: FetchedTweet) =>
+      tweet.text.includes(searchConditions1) ||
+      tweet.text.includes(searchConditions2)
   );
 
-  return extractedTweets;
+  return extractedTweets.map((tweet: FetchedTweet) => {
+    return new ExtractedTweet({ id: tweet.id });
+  });
 };
 
 export default hundler;

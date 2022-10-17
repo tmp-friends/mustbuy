@@ -1,4 +1,4 @@
-export class LikedTweets {
+export class ExtractedTweet {
   public readonly id: string;
 
   public constructor(props: { id: string }) {
