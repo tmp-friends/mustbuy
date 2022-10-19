@@ -9,11 +9,20 @@ const searchConditions2 = "#芸カ27お品書き";
 const token = process.env.TWITTER_APP_USER_TOKEN ?? "";
 const twitterClient = new Twitter(token).readOnly;
 
+/**
+ * @remarks
+ * ユーザ名から直近100件のいいねしたツイートを取得し、
+ * 取得したツイートの中から検索語の含むツイートを返す処理
+ *
+ * @param req - APIRoutesへのRequest情報
+ * @returns res - APIRoutesからのResponse情報
+ */
 const hundler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name } = req.query;
   try {
     const userId = await getUserId(name);
-    const tweets = await getLikedTweets(userId);
+    const fetchedTweets = await getLikedTweets(userId);
+    const tweets = extractTweets(fetchedTweets);
 
     console.log(tweets);
 
@@ -31,6 +40,13 @@ const hundler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
+/**
+ * @remarks
+ * ユーザ名からユーザIDを取得する処理
+ *
+ * @param name - ユーザ名 ex.temple_circle
+ * @returns userId - ユーザID
+ */
 const getUserId = async (
   name: string | string[] | undefined
 ): Promise<string> => {
@@ -43,12 +59,28 @@ const getUserId = async (
   return userId;
 };
 
-const getLikedTweets = async (userId: string): Promise<ExtractedTweet[]> => {
+/**
+ * @remarks
+ * ユーザIDからいいねツイート(直近100件)を取得する処理
+ *
+ * @param userId - ユーザID
+ * @returns fetchedTweets - いいねツイート
+ */
+const getLikedTweets = async (
+  userId: string
+): Promise<TweetV2UserLikedTweetsPaginator> => {
   const fetchedTweets = await twitterClient.v2.userLikedTweets(userId);
 
-  return extractTweets(fetchedTweets);
+  return fetchedTweets;
 };
 
+/**
+ * @remarks
+ * 特定の検索語にマッチするいいねツイートのみに絞り込む処理
+ *
+ * @param fetchedTweets - いいねツイート
+ * @returns 絞り込んだいいねツイート
+ */
 const extractTweets = (
   fetchedTweets: TweetV2UserLikedTweetsPaginator
 ): ExtractedTweet[] => {
