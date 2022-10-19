@@ -1,8 +1,9 @@
 import { FC } from "react";
 import { SimpleGrid, Text } from "@chakra-ui/react";
 import { TwitterTweetEmbed } from "react-twitter-embed";
+import { ExtractedTweet } from "../domain/extracted-tweet";
 
-export const tweets: FC = (tweets?) => {
+export const tweets: FC<ExtractedTweet[]> = (tweets: ExtractedTweet[]) => {
   if (!tweets.length) {
     return (
       <Text fontWeight="semibold" align="center">
