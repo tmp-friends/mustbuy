@@ -1,4 +1,4 @@
-import Twitter, { TweetV2UserLikedTweetsPaginator } from "twitter-api-v2";
+import { TwitterApi, TweetV2UserLikedTweetsPaginator } from "twitter-api-v2";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { FetchedTweet } from "./types/fetched-tweet";
 import { ExtractedTweet } from "../../domain/extracted-tweet";
@@ -7,7 +7,7 @@ const searchConditions1 = "#芸カ27";
 const searchConditions2 = "#芸カ27お品書き";
 
 const token = process.env.TWITTER_APP_USER_TOKEN ?? "";
-const twitterClient = new Twitter(token).readOnly;
+const twitterClient = new TwitterApi(token).readOnly;
 
 /**
  * @remarks
@@ -81,9 +81,10 @@ const findLikedTweets = async (
  * @param fetchedTweets - いいねツイート
  * @returns 絞り込んだいいねツイート
  */
-const extractTweets = (
-  fetchedTweets: TweetV2UserLikedTweetsPaginator
-): ExtractedTweet[] => {
+// TODO:
+// fetchedTweetsをTweetV2UserLikedTweetsPaginator型にすると、
+// _realDataがPrivateなためbuildエラーとなる
+const extractTweets = (fetchedTweets: any): ExtractedTweet[] => {
   if (!fetchedTweets) {
     throw new Error("LikedTweet not found");
   }
