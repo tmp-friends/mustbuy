@@ -21,7 +21,7 @@ const hundler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name } = req.query;
   try {
     const userId = await getUserId(name);
-    const fetchedTweets = await getLikedTweets(userId);
+    const fetchedTweets = await findLikedTweets(userId);
     const tweets = extractTweets(fetchedTweets);
 
     console.log(tweets);
@@ -66,7 +66,7 @@ const getUserId = async (
  * @param userId - ユーザID
  * @returns fetchedTweets - いいねツイート
  */
-const getLikedTweets = async (
+const findLikedTweets = async (
   userId: string
 ): Promise<TweetV2UserLikedTweetsPaginator> => {
   const fetchedTweets = await twitterClient.v2.userLikedTweets(userId);
