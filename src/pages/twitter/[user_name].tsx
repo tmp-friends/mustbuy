@@ -9,11 +9,12 @@ import { tweets } from "../../components/twitter";
 const TwitterUserName: NextPage = () => {
   const router = useRouter();
   const name = router.query.user_name ?? "";
+  const keyword = router.query.keyword ?? "";
 
   const fetcher = (url: string): Promise<any> =>
     fetch(url).then((res) => res.json());
   const { data, error } = useSWR(
-    `/api/find-liked-tweets?name=${name}`,
+    `/api/find-liked-tweets?name=${name}&keyword=${keyword}`,
     fetcher
   );
 

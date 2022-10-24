@@ -3,9 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { FetchedTweet } from "./types/fetched-tweet";
 import { ExtractedTweet } from "../../domain/extracted-tweet";
 
-const searchConditions1 = "#芸カ27";
-const searchConditions2 = "#芸カ27お品書き";
-
 const token = process.env.TWITTER_APP_USER_TOKEN ?? "";
 const twitterClient = new TwitterApi(token).readOnly;
 
@@ -18,11 +15,13 @@ const twitterClient = new TwitterApi(token).readOnly;
  * @returns res - APIRoutesからのResponse情報
  */
 const hundler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name } = req.query;
+  const name = req.query.name ?? "";
+  const keyword = req.query.keyword ?? "";
+
   try {
     const userId = await getUserId(name);
     const fetchedTweets = await findLikedTweets(userId);
-    const tweets = extractTweets(fetchedTweets);
+    const tweets = extractTweets(fetchedTweets, keyword);
 
     console.log(tweets);
 
@@ -79,20 +78,22 @@ const findLikedTweets = async (
  * 特定の検索語にマッチするいいねツイートのみに絞り込む処理
  *
  * @param fetchedTweets - いいねツイート
+ * @param keyword - 検索ワード
  * @returns 絞り込んだいいねツイート
  */
 // TODO:
 // fetchedTweetsをTweetV2UserLikedTweetsPaginator型にすると、
 // _realDataがPrivateなためbuildエラーとなる
-const extractTweets = (fetchedTweets: any): ExtractedTweet[] => {
+const extractTweets = (
+  fetchedTweets: any,
+  keyword: string
+): ExtractedTweet[] => {
   if (!fetchedTweets) {
     throw new Error("LikedTweet not found");
   }
 
   const extractedTweets = fetchedTweets._realData.data.filter(
-    (tweet: FetchedTweet) =>
-      tweet.text.includes(searchConditions1) ||
-      tweet.text.includes(searchConditions2)
+    (tweet: FetchedTweet) => tweet.text.includes(`#${keyword}`)
   );
 
   return extractedTweets.map((tweet: FetchedTweet) => {
