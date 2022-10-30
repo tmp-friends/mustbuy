@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   const { handleSubmit, register, reset } = useForm();
 
   const router = useRouter();
-  const onSubmit = (inputData) => {
+  const onSubmit = (inputData: any) => {
     router.push({
       pathname: `/twitter/${inputData.name}`,
       query: { keyword: inputData.keyword },
