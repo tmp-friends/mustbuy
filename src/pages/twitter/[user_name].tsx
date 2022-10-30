@@ -1,9 +1,10 @@
-import { Text, Box } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 
+import { HttpError } from "../../helpers/error";
 import { tweets } from "../../components/twitter";
 
 const TwitterUserName: NextPage = () => {
@@ -11,16 +12,38 @@ const TwitterUserName: NextPage = () => {
   const name = router.query.user_name ?? "";
   const keyword = router.query.keyword ?? "";
 
-  const fetcher = (url: string): Promise<any> =>
-    fetch(url).then((res) => res.json());
+  const fetcher = async (url: string): Promise<any> => {
+    const res = await fetch(url);
+    console.log(res);
+    if (!res.ok) throw new HttpError({ status: res.status, message: "" });
+
+    return res.json();
+  };
+
   const { data, error } = useSWR(
     `/api/find-liked-tweets?name=${name}&keyword=${keyword}`,
     fetcher
   );
 
-  if (error) return <Box>Failed to load</Box>;
-  if (!data) return <Box>Now Loading...</Box>;
-  console.log(data);
+  // エラー表示
+  if (error) {
+    if (error.status === 404) {
+      return <Text>Page not found</Text>;
+    }
+
+    if (error.status === 400) {
+      return <Text>入力値エラーです</Text>;
+    }
+
+    if (error.status === 429) {
+      return <Text>少し時間をおいてから再度実行してください</Text>;
+    }
+
+    return <Text>Failed to load</Text>;
+  }
+
+  // Loading表示
+  if (!data) return <Text>Now Loading...</Text>;
 
   return (
     <>
